@@ -1,0 +1,150 @@
+---------------------------------------React Documentation---------------------------------------
+1. How to instantly use react (for Learning purposes)
+
+- Include these script tags in your HTML:
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+- Include "type = "text/babel" " in the script tag of your script in html:
+
+    <script src="script.js" type="text/babel"></script>
+
+-------------------------------------------------------------------------------------------------
+2. Render html using React
+
+You can do so by using this syntax in JS:
+
+    ReactDOM.render(HTML Content, Where to input it(using document.get...)) //NOTICE HOW ITS WRITTEN "ReactDOM"
+
+-------------------------------------------------------------------------------------------------
+3. React is used to make composable apps
+
+Instead of having an HTML file with a large number of code lines, we can make or use ready-made components in React.
+
+-------------------------------------------------------------------------------------------------
+4. How to make a component in React
+
+First you need to create a function either using ES6 or the normal function writing and having it return html, 
+then you call the html using ReactDOM.render(), the syntax is the following:
+
+- Create a component
+
+    const myFunction = () => {
+        return (
+            //HTML Goes here
+        )
+    }
+
+- Render the component
+
+    ReactDOM.render(
+        <myFunction />,
+        *Where to place the component*
+    )
+
+-------------------------------------------------------------------------------------------------
+5. React is declartive instead of imperative
+
+In vanilla JS we were doing the code imperativly, meaning we need to tell the computer how to do things.
+In React we do it in a declartive manner, we just tell the computer what to do, and it'll know how to do it.
+
+-------------------------------------------------------------------------------------------------
+6. What is JSX?
+
+Its the XML of JS made to be used with react and is very similar to HTML, but with some differences, for example:
+
+    - the attrbuite "class" in HTML, is named "className" in JSX
+
+Something to note as well is when you're calling the ReactDOM.render() function and you want to render more than
+one HTML Element you should wrap these elements in a parent element like this:
+
+    ReactDOM.render(
+        <div>
+            <h1>Get it</h1>
+            <p>DONE</p>
+        </div>
+    )
+
+This makes it so that I'm actually rendering one parent Element "The div" with as many children as we want.
+
+-------------------------------------------------------------------------------------------------
+7. How a JSX element looks like?
+
+As we can see here it is created as a JS object with many props(properties) such as the children and the className:
+
+{$$typeof: Symbol(react.element), type: 'div', key: null, ref: null, props: {…}, …}
+$$typeof: Symbol(react.element)
+key: null
+props: {children: Array(2)}
+ref: null
+type: "div"
+_owner: null
+_store: {validated: false}
+_self: null
+_source: null
+[[Prototype]]: Object
+
+-------------------------------------------------------------------------------------------------
+8. create a React Application
+
+To create a new application type the following in CL:
+
+$ npx create-react-app appname
+
+Then we can run the application by navigating to the app file and writing npm start like this:
+
+$ cd appname
+$ npm start
+
+-------------------------------------------------------------------------------------------------
+9. Importing React and ReactDOM
+
+First for the REact app to work the JS file needs to be named index.js as this is considered the base/main JS file
+
+then inside the JS file we type:
+
+    import React from "react"
+    import ReactDOM from "react-dom"
+
+-------------------------------------------------------------------------------------------------
+10. appending JSX Variable to HTML element
+
+When using:
+    document.getElementByID("ElemID").append(JSXVariable)
+
+The page will show the item as [object Object] because the JSX variable itself is considered a JS object and not an HTML element
+
+To actually show it we use the ReactDOM.render(JSXVariable) since it can "decode" the object and consider it an actual HTML element
+
+-------------------------------------------------------------------------------------------------
+
+Quiz 1:
+
+1. Why do we need to `import React from "react"` in our files?
+
+    So that we can use the react functionalities, and create JSX components as well as having IntelliSense Support
+
+2. If I were to console.log(page) in index.js, what would show up?
+
+    a JS Object representing the page component made using JSX
+
+3. What's wrong with this code:
+```
+const page = (
+    <h1>Hello</h1>
+    <p>This is my website!</p>
+)
+```
+    This code included two elements without a wrapper parent element meaning we can't use it with ReactDOM.render()
+
+4. What does it mean for something to be "declarative" instead of "imperative"?
+
+    Meaning we don't need to tell the computer how to do it, we only tell it to do it, and it'll worry about how to do it
+
+5. What does it mean for something to be "composable"?
+
+    This means I can create a component out of a markdown language like JSX that I can later use in multiple instances
+    and for something to be composable, it means that I'm creating it using many differnet components, some of which that might be made by other users
+-------------------------------------------------------------------------------------------------
