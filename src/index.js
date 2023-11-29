@@ -1,5 +1,10 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import Header from "./Header.js"
+import MainContent from "./MainContent.js"
+import Footer from "./Footer.js"
+import "./index.css";
+
 // ReactDOM.render(<h1>Hello, Everyone!</h1>, document.getElementById("root"))
 
 // ReactDOM.render(<ul><li>Omar</li><li>Mohammed</li></ul>, document.getElementById("root"))
@@ -135,4 +140,22 @@ import ReactDOM from "react-dom"
 // )
 // ReactDOM.render(page, root)
 //Challenge 7 Completed
+//------------------------------------------------------------------
+
+
+const App = () => {
+    return (
+        <div className="page-container">
+            <Header />
+            <MainContent />
+            <Footer />
+        </div>
+    )
+}
+
+ReactDOM.render(
+    <App />,
+    document.getElementById("root")
+)
+// Challenge 8 (1&2/2)  & 9 & 10 Completed
 //------------------------------------------------------------------

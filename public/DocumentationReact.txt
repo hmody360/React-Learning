@@ -89,6 +89,7 @@ _source: null
 -------------------------------------------------------------------------------------------------
 8. create a React Application
 
+Before Creating a React App we need to make sure we have both node and npm we can check for that using node -v / npm -v
 To create a new application type the following in CL:
 
 $ npx create-react-app appname
@@ -122,29 +123,169 @@ To actually show it we use the ReactDOM.render(JSXVariable) since it can "decode
 
 Quiz 1:
 
-1. Why do we need to `import React from "react"` in our files?
+    1. Why do we need to `import React from "react"` in our files?
 
-    So that we can use the react functionalities, and create JSX components as well as having IntelliSense Support
+        So that we can use the react functionalities, and create JSX components as well as having IntelliSense Support
 
-2. If I were to console.log(page) in index.js, what would show up?
+    2. If I were to console.log(page) in index.js, what would show up?
 
-    a JS Object representing the page component made using JSX
+        a JS Object representing the page component made using JSX
 
-3. What's wrong with this code:
-```
-const page = (
-    <h1>Hello</h1>
-    <p>This is my website!</p>
-)
-```
-    This code included two elements without a wrapper parent element meaning we can't use it with ReactDOM.render()
+    3. What's wrong with this code:
+    ```
+    const page = (
+        <h1>Hello</h1>
+        <p>This is my website!</p>
+    )
+    ```
+        This code included two elements without a wrapper parent element meaning we can't use it with ReactDOM.render()
 
-4. What does it mean for something to be "declarative" instead of "imperative"?
+    4. What does it mean for something to be "declarative" instead of "imperative"?
 
-    Meaning we don't need to tell the computer how to do it, we only tell it to do it, and it'll worry about how to do it
+        Meaning we don't need to tell the computer how to do it, we only tell it to do it, and it'll worry about how to do it
 
-5. What does it mean for something to be "composable"?
+    5. What does it mean for something to be "composable"?
 
-    This means I can create a component out of a markdown language like JSX that I can later use in multiple instances
-    and for something to be composable, it means that I'm creating it using many differnet components, some of which that might be made by other users
+        This means I can create a component out of a markdown language like JSX that I can later use in multiple instances
+        and for something to be composable, it means that I'm creating it using many differnet components, some of which that might be made by other users
+-------------------------------------------------------------------------------------------------
+11. Creating a React Component
+
+    We write a java function as usual but we make two changes:
+        - The function's name starts with a capital letter instead of a small letter (Pascal Function Writing)
+        - When calling the function when don't use the known "functionName()" way of calling, instead we call it
+        as if it's an HTML element like this "<FunctionName />"
+-------------------------------------------------------------------------------------------------
+Quiz 2
+
+    1. What is a React component?
+
+        is a JS function written in JS and has the function name start with a capital letter, as well as being called,
+        into the ReactDOM as an HTML element like this <ReactComponent />
+
+    2. What's wrong with this code?
+    ```
+    function myComponent() {
+        return (
+            <small>I'm tiny text!</small>
+        )
+    }
+    ```
+
+        The function's name started with a small letter, when it should've started with a capital letter
+
+    3. What's wrong with this code?
+    ```
+    function Header() {
+        return (
+            <header>
+                <nav>
+                    <img src="./react-logo.png" width="40px" />
+                </nav>
+            </header>
+        )
+    }
+
+    ReactDOM.render(Header(), document.getElementById("root"))
+    ```
+        We're calling the React component by function name, we need to call it like this"<Header />"
+-------------------------------------------------------------------------------------------------
+12. Creating Parent/Child Components
+
+    By creating multiple React components and calling them from each other does the parent/child binding, for example:
+'''
+        const Header = () => {
+            return (
+                <Header><img / src="Pic.png"></Header>
+            )
+        }
+        const MainContent = () => {
+            return (
+                <div>
+                    <h1>Hmody Website</h1>
+                        <ol>
+                        <li>1</li>
+                        <li>2</li>
+                        <li>3</li>
+                        </ol>
+                </div>
+            )
+        }
+        const Page = () => {
+            return (
+                <div>
+                <Header />
+                <MainContent />
+                </div>
+            )
+        }
+'''
+
+As we can see here, we're calling the Header and MainContent components from within the Page component,
+This makes the Page component the parent, and the rest are its children.
+-------------------------------------------------------------------------------------------------
+13. Styling
+
+    - To style an element we simply add the "className" attribute to it.
+    - also do not forget to call your CSS file within JS, since we're doing the entire UI there now
+    you can do it by importing the stylesheet like this:
+        import styles from "/pathOfStyleSheet"
+
+-------------------------------------------------------------------------------------------------
+14. Storing and organizing code
+
+    So this depends on your personal preference or how you and your team decide to do it
+    one way is to seperate each component in its own JS file and have its name start with a capital letter to indicate that it's a component,
+    like if I wanted the component "Header" in its own file, i'd name the file "Header.js" and so on
+
+    we should * import React from "react" * and also export the function in its new file like this:
+
+    First way: by adding export default before the function itself:
+    '''
+        export default Header = () => {
+        return (
+            <header>
+                <nav className="nav-bar">
+                    <img src="images/React-icon.svg.png" className="logo" />
+                    <ul className="nav-items">
+                        <li>Pricing</li>
+                        <li>About</li>
+                        <li>Contact</li>
+                    </ul>
+                </nav>
+            </header>
+        )
+    }
+    '''
+    Second way: by adding it at the end of the file:
+
+    '''
+    const Header = () => {
+        return (
+            <header>
+                <nav className="nav-bar">
+                    <img src="images/React-icon.svg.png" className="logo" />
+                    <ul className="nav-items">
+                        <li>Pricing</li>
+                        <li>About</li>
+                        <li>Contact</li>
+                    </ul>
+                </nav>
+            </header>
+        )
+    }
+
+    export default Header
+    '''
+
+Finally now we can import it within our main JS code using * import Header from "./Header.js" *
+-------------------------------------------------------------------------------------------------
+15. Loading Images and styles when using Create-React-App
+
+    - To Load images, you need to have them contained within the public folder of the React app then simply calling them as per ususal.
+    OR we can have the images folder in the src dirctory and then type * import imageName from "./PathToImage" * then when calling the image we use the import's name
+    like this for example "<img src={imageName} />".
+    
+    - To call a style sheet as mentioned before we need to call * import "./style.css" *
+    and we only need to import this in the main JS file.
 -------------------------------------------------------------------------------------------------
