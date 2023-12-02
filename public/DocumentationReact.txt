@@ -289,3 +289,809 @@ Finally now we can import it within our main JS code using * import Header from 
     - To call a style sheet as mentioned before we need to call * import "./style.css" *
     and we only need to import this in the main JS file.
 -------------------------------------------------------------------------------------------------
+16. props
+
+Like JS functions we can gibe them properties that make the function dynamic, and enable it to take different input each time it's called.
+
+to insert these values, React has made an easy way to do so, here's an example:
+```
+    const App = () => {
+        const firstName = "Mohammed"
+        const lastName = "Soqati"
+        return (
+            <h1>{firstName} {lastName}</h1>
+        )
+    }
+```
+This shows that to insert JS elements within JSX we contain it within braces { JS CONTENT }
+so basically anything inside these braces is considered normal JS, I can input values or functions inside it and it'll work.
+
+Now to create an actual component that has props what we'll do is that when createing the Component itself we can give it the parameter (props) it can be called anything else too,
+
+so for example:
+
+```
+    const Contact = (props) => {
+    return (
+        <div className="contact-card">
+                <img src={props.img}/>
+                <h3>{props.name}</h3>
+                <div className="info-group">
+                    <i class="fa-solid fa-phone"></i>
+                    <p>{props.phone}</p>
+                </div>
+                <div className="info-group">
+                <i class="fa-solid fa-envelope"></i>
+                    <p>{props.email}</p>
+                </div>
+            </div>
+    )
+}
+```
+
+so as we can see this means whenever we call this component we can give it a different input each time, this input being the parameters of the component
+now when we call this within the "App.js" we do it this way as if the parameters are HTML attributes:
+
+    const App = () => {
+        return (
+            <Contact img="./images/Mohammed.png" name="Mohammed Soqatu\i" phone="(966) 599215175" email="SoqatiMohammed@gmail.com" />
+        )
+    }
+
+This makes our components dynamic and reusable over time.
+-------------------------------------------------------------------------------------------------
+Quiz 3 (Props)
+
+1. What do props help us accomplish?
+
+Props help us make our components dynamic na dbe able to take in info without us having to hard-code it each time.
+
+2. How do you pass a prop into a component?
+
+passing a prop into an element is easy, we first define the props themselves in an instance of the element like so:
+```
+<Contact 
+    name="Mohammed"
+    age="23"
+    job="Software Developer"
+/>
+```
+then inside the component itself we pass a parameter (props) which will create an object of the attributes we inputted for the instance of the component (in our example an object that contains name, age and job)
+then call these inside the component itself like so, and we should not forget to include it in {BRACES}:
+```
+    const Contact = (props) => {
+        return (
+            <div>
+                <h1>{props.name}</h1>
+                <h1>{props.age}</h1>
+                <h1>{props.job}</h1>
+            </div>
+        )
+    }
+```
+3. Can I pass a custom prop (e.g. `blahblahblah={true}`) to a native
+   DOM element? (e.g. <div blahblahblah={true}>) Why or why not?
+   
+We can't because the DOM element has specific props (or in actuallty attributes) that are defined for it,
+but we can add custom props to our custom components.
+
+4. How do I receive props in a component?
+function Navbar() {
+    return (
+        <header>
+            ...
+        </header>
+    )
+}
+
+by adding (props) as a parameter for the compoents and calling it within the code as if it was an object:
+"props.propName"
+
+5. What data type is `props` when the component receives it?
+
+An Object 
+-------------------------------------------------------------------------------------------------
+17. Prop (Object) Destructuring 
+we can destructure a prop by simply calling its keys in curly braces, like so:
+```
+const Person = {
+    name: "Mohammed"
+    age: 23
+    job "Software Enginner"
+}
+
+// To deconstuct
+const {name, age, job}
+```
+
+In the case of props we can simply do it instantly, and change the calling of the objects
+```
+const Contact = ({name, age, job}) => {
+        return (
+            <div>
+                <h1>{name}</h1>
+                <h1>{age}</h1>
+                <h1>{job}</h1>
+            </div>
+        )
+    }
+```
+but it's better to use props
+-------------------------------------------------------------------------------------------------
+18. Generate a prop condtionally
+
+To do this we need to do the following:
+
+```
+const Joke = (props) => {
+    return(
+        { props.setup && <h4>{props.setup}</h4>}
+        <p>{props.punchline}</p>
+    )
+}
+```
+What we're doing here is we're checking if props.setup exists (if not it'll return false) it,ll render the <h4>, otherwise it won't.
+-------------------------------------------------------------------------------------------------
+19. How to pass a non-string prop
+
+To do this we encapsulate the prop value itself in {Brackets} so that it considers it a non-string value, for example:
+```
+    const App = () => {
+        return (
+            <Joke 
+                setup="Just Laugh dammit."
+                punchline=" Hahahaha"
+                likes={4}
+            />
+            <Joke 
+                setup="Just Laugh Again."
+                punchline=" Ok hahaha"
+                likes={9}
+            />
+        )
+    }
+```
+-------------------------------------------------------------------------------------------------
+20. React is able to render Arrays
+
+When writing in JSX we can pass an array of any type into the JSX by surrounding it in {Braces} and it will do the map function on all elements of the array
+, like so:
+```
+    const App = () => {
+        const colors = ["Red" , "Yellow", "Green"]
+
+        return (
+            {colors}
+        )
+    }
+```
+This will print all contents of colors array right next to each other (since it's an array of strings)
+
+Now to make this more efficent we can use an array of JSX elements instead, like this:
+```
+    const App = () => {
+        const colors = [<p>Red</p>, <p>Yellow</p>, <p>Green</p>]
+
+        return (
+            {colors}
+        )
+    }
+```
+
+This will insert the content of the array as JSX elements one by one. 
+
+You can already see how this is going to benifet us, now we can also do this using an array of objects, wih each object representing an item
+, we'll use the joke concept here:
+
+So let's say we have a file named "JokeData.js" that containes all of our joke objects like this:
+```
+export default [
+    {
+        setup: "Why did the chicken cross the road?",
+        punchline: "To get to the other side lol"
+    },
+    {
+        setup: "I got my daughter a fridge for her birthday.",
+        punchline: "I can't wait to see her face light up when she opens it."
+    },
+    {
+        setup: "How did the hacker escape the police?",
+        punchline: "He just ransomware!"
+    },
+    {
+        setup: "Why don't pirates travel on mountain roads?",
+        punchline: "Scurvy."
+    },
+    {
+        setup: "Why do bees stay in the hive in the winter?",
+        punchline: "Swarm."
+    },
+    {
+        punchline: "I Ate is the new product from apple"
+    }
+]
+```
+Of course we're exporting it so we can import it within the "App.js" file, no in the App.js file:
+
+```
+import React from "react";
+import JokeData from "./components/JokeData"
+import Joke from "./components/Joke"
+
+const App = () => {
+    const jokeElems = JokeData.map(joke => {
+        return <Joke setup={joke.setup} punchline={joke.punchline} />
+    })
+    return (
+        <div className="app-container">
+            {jokeElems}
+        </div>
+    )
+}
+export default App
+```
+as we can see we first imported our JokeData.js file which has an array of joke objects then we created a variable 
+jokeElems that will map the actual elements themselves, then we used the map method to make an array of <Joke /> objects
+that have the contents from "JokeData.js" file.
+-------------------------------------------------------------------------------------------------
+Quiz 4 (Map)
+
+1. What does the `.map()` array method do?
+
+    it is method for arrays * array.map() * that takes in a function as its parameter and enables us to return an array of the elements
+    within it after certain modification or other elements that use the elements within the array.
+
+2. What do we usually use `.map()` for in React?
+
+    an array of objects that return an array of JSX elements.
+
+3. Why is using `.map()` better than just creating the components
+   manually by typing them out?
+
+    This will enable us to add the info of the element without having to create a new element entirely and also makes the code look more cleaner.
+    as well as helping us in real life application sense most developers use objects to represent JSX element contents.
+-------------------------------------------------------------------------------------------------
+21. Loading images from .map() (When using CRA)
+
+Just have the images folder be in the public directory instead of src directory and this way it'll actually work.
+-------------------------------------------------------------------------------------------------
+22. Conditional JSX element rendering
+
+so when we have a JSX element that we want to display, React has an easy way to do so, like the following:
+```
+const Card = () => {
+    return(
+        <div>
+        { ConditionToSatisfy && <p>YoYo</p>}
+        </div>
+    )
+}
+```
+as we can see here, if the ConditionToSatisfy returns true, the <p> JSX element will show up, otherwise it won't.
+-------------------------------------------------------------------------------------------------
+23. Passing Objects as props
+
+When creating an instance of a JSX element, we pass the list of props like this:
+```
+const cardElems = cardData.map( elem => {
+        return (
+<Card 
+    key={elem.id}
+    img={elem.img}
+    rating={elem.rating}
+    reviewCount={elem.reviewCount}
+    location={elem.location}
+    title={elem.title}
+    price={elem.price}
+    openSpots={elem.openSpots}
+/>
+        )
+})
+```
+
+To make it more consiced and more clean, we can pass a the elem parameter and modify the code in the component itself to accept the item
+like this:
+
+```
+const cardElems = cardData.map( elem => {
+        return (
+<Card 
+    key={elem.id}
+    elem={elem}
+/>
+        )
+})
+```
+We keep the id because it is unique to each instatnce of the Card JSX element, then we go back to the componenet itself
+and every place where we're calling "props.attributeName" we change it to "props.elem.attributeName".
+-------------------------------------------------------------------------------------------------
+24. Spreading objects as props:
+
+Now what we can do instead of passing objects as props os to spread them, this is just like the old way of doing it
+, but in a shorter way:
+```
+const cardElems = cardData.map( elem => {
+        return (
+<Card 
+    key={elem.id}
+    {...elem}
+/>
+        )
+})
+```
+
+the {...elem} here gets all the props and spreads them, it is the same as writing the following:
+
+        img={elem.img}
+        rating={elem.rating}
+        reviewCount={elem.reviewCount}
+        location={elem.location}
+        title={elem.title}
+        price={elem.price}
+        openSpots={elem.openSpots}
+
+So this enables us to make it much much shorter, and also not need to add the .elem or whatwever to our props.atrributeName in the component.
+-------------------------------------------------------------------------------------------------
+25. The difference between Static and Dynamic Websites:
+
+Staic Webpages:
+    
+    - Read-Only, no changes to data
+    - Examples:
+        - Blogs
+        - News Sites
+        - Recipes
+        - Etc. 
+
+Interactive (Dynamic) Web Apps:
+
+    - Read-Write: ability to change data
+    - Higly Interactive
+    - Displayes your data
+    - Examples:
+        - Bank website
+        - Airbnb
+        - Etc.
+-------------------------------------------------------------------------------------------------
+26. Event Listeners
+
+So to use event listeners in React it is very similar to inline HTML event listners, for example:
+
+```
+    const App = () => {
+        const myFunction = () => {
+            console.log("Button Clicked")
+        }
+        return(
+            <div>
+                <button onClick{myFunction}>Click me</button>
+            </div>
+        )
+    }
+```
+What we're seeing here is we're calling the onClick event listenr for the button and passing a function within it, we can see
+how different it is from inline HTML becuase the event listener is "onClick" instead of "onclick" with a capital C,
+and instead of using a string * onclick="function" * we're using {Braces} * onClick{function} *
+
+*** Notice how when calling the function we don't input () because this will make it instantly run.
+-------------------------------------------------------------------------------------------------
+27. How React handles the state of a JS variable
+
+So in here we have an application that adds a "Thing" every time we press the add Item Button:
+
+```
+const thingsArray = ["Thing 1", "Thing 2"]
+    const thingElems = thingsArray.map(thing => {
+        return (<p>{thing}</p>)
+    })
+    const addItem = () => {
+        thingsArray.push(`Thing ${thingsArray.length + 1}`)
+        console.log(thingsArray)
+    }
+return (
+        <div>
+            <button onClick={addItem}>Add Item</button>
+            {thingElems}
+        </div>
+    )
+```
+
+the problem here is that when clicking the button and adding, while it is being added to the array, it won't update the UI,
+the reason for that is because the thingsArray and thingElems are seen by React when the program begins, after that it isn't really updating itself with its new values.
+-------------------------------------------------------------------------------------------------
+28. React props Vs React States (What's the difference)
+
+    - Props: are properties that we pass to a component so that it works correctly, like functions that recives parameters.
+    The parameters or props in out instance, aren't meant to be modfied or changed, we only read and use them.
+    we are allowed to change them but not from the body of the component, only before passing it to the < Component /> JSX element.
+
+    - State: are values that are managed by the component, like a variable that we defined in a function, everytime we change that value
+    , it's state should be updated.
+-------------------------------------------------------------------------------------------------
+Quiz 5 (Props VS State)
+1. How would you describe the concept of "state"?
+
+    State is the values that we update or change within the component itself, and it makes sense to change them,
+    because the user is activly interacting with the component.
+
+2. When would you want to use props instead of state?
+
+    When we want to just pass values to our component without having them be changed, becuase we have
+the data already.
+
+3. When would you want to use state instead of props?
+
+    When this certain value needs to be changed by a user's action or interaction
+
+4. What does "immutable" mean? Are props immutable? Is state immutable?
+
+Immutable means we shouldn't change or be able to change it, in our case since props are considered "Read-Only",
+we shouldn't change them or be able to, and state isn't immutable since the whole purpose of it is to change the value and its current state.
+
+-------------------------------------------------------------------------------------------------
+29. How to use React state
+
+There are many React methods that are called hooks, and one of them is called "useState()" we can call this in a component or App JS file
+, like this: 
+
+```
+import React from "react"
+
+const App = () => {
+    
+    const result = React.useState(valueToSave, function())
+
+    return {
+        <div>
+            <Stuff />
+        </div>
+    }
+}
+```
+As we can see here, we're creating a variable using useState, what "React.useState()" returns is an array with two values,
+the first value is the value we want to save and the second value is a function, this function is used to set the value of the first
+array element, so we call that function whenever we want to change the value in the correct way,
+the function name is usually "set" followed by the variable we're setting:
+
+    const [valueToSave, setValueToSave(newValue)] = React.useState(valueToSave)
+
+    so just passing a new value to the setValueToSave function, then calling that function will instantly change it.
+    and we don't need to pass the function in the "React.useState()" since it is already considered set.
+-------------------------------------------------------------------------------------------------
+30. Array destructuring
+
+When we're making a variable that has it's content returned as an array of items, we can make the variable destructured
+, so normally we'd have something like this:
+```
+    const stateArray = React.useState(valueToSave, fucntion())
+    console.log(stateArray[0])
+```
+As we can see we're getting the value to save here by calling the array and its 0th index to log the value, but if we destruct the array:
+```
+    const [result, function] = React.useState(valueToSave, fucntion())
+    console.log(result)
+```
+This way we can instantly get to the 0th value of the returned array without having to call its index.
+-------------------------------------------------------------------------------------------------
+31. Using number++ or anything similiar in React when changing state
+
+Let's say I have a number that I want to increase whenever I click a button for example:
+```
+const [number, setNumber] = React.useState(0)
+
+setNumber(number++)
+```
+doing it This way is considered forbidden in React since the setNumber itself is supposed to change the value
+since "number++" is the same as "number = number + 1" when doing it in here we're kinda of doing this,
+ "number = (number = number + 1)" which is very strange, so using "setNumber(number + 1)" is considered the better option.
+-------------------------------------------------------------------------------------------------
+32. How react handels a function that is given to the setValue in React.useState() method
+
+So when we want to change a value of the "valueToSave" in the "React.useState()" function we use the second array element which is the function used to change "valueToSave"
+when doing so we usually just pass it the new value for example:
+```
+const [number, setNumber] = React.useState(0)
+
+setNumber(number + 1)
+```
+This would be the normal way of doing it, we can also pass it a function, that can take a parameter, THIS parameter,
+is considered the oldValue always:
+
+```
+const [number, setNumber] = React.useState(0)
+
+setNumber( (oldValue) => {
+    oldValue + 1
+})
+```
+Which enables it to do the same thing.
+-------------------------------------------------------------------------------------------------
+Quiz 6 (Changing state)
+
+1. You have 2 options for what you can pass in to a
+   state setter function (e.g. `setCount`). What are they?
+   
+    option one: passing a value instantly like: `setCount(count + 1)` or `setCount(3)`
+    option two: passing a function that has its parameter considered as the old value like: 'setCount(olValue => oldValue +1)' or setCount((oldValue) => {oldValue + 1})
+
+2. When would you want to pass the first option (from answer
+   above) to the state setter function?
+
+when the value you're chagning to DOSEN'T depend on the previous value
+
+3. When would you want to pass the second option (from answer
+   above) to the state setter function?
+
+when the value you're chagning to DOES depend on the previous value
+-------------------------------------------------------------------------------------------------
+33. How to use Ternary (simple if/else)
+
+    Basically instead of doing the long if/else methodology, like this: 
+```
+    let isAwake = true
+    if (isAwake == true){
+        return "YES"
+    } else {
+        return "No"
+    }
+```
+So this is the normal way of doing it to make it simpler we use the ternary operation like this:
+```
+    let isAwake = true
+    let answer = isAwake ? "Yes" : "No"
+```
+this means if the value of "isAwake" is true it will return the first value ("Yes"), otherwise it'll retunr the second value ("No").
+-------------------------------------------------------------------------------------------------
+34. How to add to an array when using React.useState()
+
+So doing this the normal way like this isn't going to work:
+```
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+function App() {
+    /**
+     * Challenge: Convert the code below to use an array
+     * held in state instead of a local variable. Initialize 
+     * the state array with the same 2 items below
+     * 
+     * Don't worry about fixing `addItem` quite yet.
+     */
+    const [thingsArray, addToThingsArray] = React.useState(["Thing 1", "Thing 2"])
+    function addItem() {
+        addToThingsArray(oldArr => oldArr.push(`Thing ${oldArr.length + 1}`)) // LOOK HERE
+    }
+    
+    const thingsElements = thingsArray.map(thing => <p key={thing}>{thing}</p>)
+    
+    return (
+        <div>
+            <button onClick={addItem}>Add Item</button>
+            {thingsElements}
+        </div>
+    )
+}
+
+ReactDOM.render(<App />, document.getElementById('root'));
+```
+because the .push() method directly changes the array which isn't ok, and also dosen't return back an array, just the length of the array
+so we can use the spread method to spread the contents of the old array and add a new element:
+```
+        addToThingsArray(oldArr => [...oldArr, `Thing ${oldArr.length + 1}`]) // LOOK HERE
+```
+-------------------------------------------------------------------------------------------------
+35. How to add to an object when using React.useState()
+
+Let's say we have a contact card that I want to change one or more things in, for this example, I want to change,
+the isFavourite property of the contact object, we'll do the following:
+
+```
+const [contact, setContact] = React.useState({
+        firstName: "John",
+        lastName: "Doe",
+        phone: "+1 (719) 555-1212",
+        email: "itsmyrealname@example.com",
+        isFavorite: true
+    })
+    
+    let starIcon = contact.isFavorite ? "star-filled.png" : "star-empty.png"
+    
+    function toggleFavorite() {
+        setContact(prevContact => {
+            return {
+                ...prevContact,
+                isFavorite: !prevContact.isFavorite //LOOK HERE
+            }
+        })
+    }
+```
+As we can see, to set one or more properties we first spread the old properties back then mention them again to overwrite them,
+this way when returning the object's data, all the old data is returned alongside the changed data.
+-------------------------------------------------------------------------------------------------
+36. Passing state as props
+
+In React, if I have a seperate component that I need to pass a state that has or is being updated, I can simply pass it.
+
+From the App.js file I have the state object that I pass to a spereate component, like so:
+
+```
+import React from "react"
+import Count from "./components/Count"
+
+export default function App() {
+    const [count, setCount] = React.useState(0) // LOOK HERE
+    
+    function add() {
+        setCount(prevCount => prevCount + 1)
+    }
+    
+    function subtract() {
+        setCount(prevCount => prevCount - 1)
+    }
+    return (
+        <div className="counter">
+            <button className="counter--minus" onClick={subtract}>–</button>
+            <Count 
+            number={count} // LOOK HERE
+            />
+            <button className="counter--plus" onClick={add}>+</button>
+        </div>
+    )
+}
+```
+as we can see I have a seperate component that is imported and rendered in my App, and I'm passing one of its props as a state, 
+that I made in the App.js file. whenever the state is changed React re-renders all components related to th state as well as,
+the App.js file.
+-------------------------------------------------------------------------------------------------
+37. Passing a function as a prop from parent to child
+
+Let's say I have a function that activates when I click on the star Icon, like here:
+```
+    function toggleFavorite() { // LOOK HERE
+        setContact(prevContact => ({
+            ...prevContact,
+            isFavorite: !prevContact.isFavorite
+        }))
+    }
+
+    return (
+        <main>
+            <article className="card">
+                <img src="./images/user.png" className="card--image" />
+                <div className="card--info">
+                    <Star 
+                    isFilled={contact.isFavorite}
+                    toggleFunction={toggleFavorite} // LOOK HERE
+                    />
+                    <h2 className="card--name">
+                        {contact.firstName} {contact.lastName}
+                    </h2>
+                    <p className="card--contact">{contact.phone}</p>
+                    <p className="card--contact">{contact.email}</p>
+                </div>
+                
+            </article>
+        </main>
+    )
+```
+As we can see the function is in the main Parent element, and interacts with the contact data, but we need to activate it in the child,
+we can do so and have the child activate onClick{} for example, when passing it to the child as a prop.
+-------------------------------------------------------------------------------------------------
+38. How is data passed in React
+
+Data is only able to propegate downward from a parent (element/component) to a child (element/component),
+through the use of props, and We can't propegate data from elements that are a sibling of each other.
+we should try to keep state in the components that need it, if possible.
+-------------------------------------------------------------------------------------------------
+39. Dynamically changing style in React
+
+Let's say I have a list of elements the I want to change their style based on a certain attribute, like this:
+
+```
+export default function App() {
+    const [squares, setBoxes] = React.useState(boxes)
+    
+    styles = {
+        backgroundColor: green; //LOOK HERE
+    }
+
+    const boxElems = squares.map(elem => {
+        return (<div style{styles} className="box-elem" key={elem.id}></div>) //LOOK HERE
+    })
+    return (
+        <main>
+            {boxElems}
+        </main>
+    )
+}
+```
+As we're seeing here I can simply say "style={StyleObject}" within the JSX element, we also need to make sure to
+write this within {Braces} and not "Quotation" since it's in React not HTML, and that the style attribute names in the styleObject,
+are camel-cased EX: "backgroundColor | borderRadius | etc...."
+-------------------------------------------------------------------------------------------------
+40. Ways of dynamically changing style (Local VS Unified)
+
+    Local: In here the style we're changing is happeninng within the component we're changing itself, for example:
+```
+import React from "react"
+import boxes from "./boxes"
+import Box from "./Box"
+
+export default function App() {
+    const [squares, setSquares] = React.useState(boxes)
+    
+    const squareElements = squares.map(square => (
+        <Box key={square.id} on={square.on} />
+    ))
+    
+    return (
+        <main>
+            {squareElements}
+        </main>
+    )
+}
+```
+```
+import React from "react"
+
+export default function Box(props) {
+    const [onState, setOnState] = React.useState(props.on)
+
+    const handleBoxClick = () => {
+        setOnState(oldState => !oldState)
+    }
+    const styles = {
+        backgroundColor: onState ? "#222222" : "transparent"
+    }
+    
+    return (
+        <div style={styles} className="box" onClick={handleBoxClick}></div>
+    )
+}
+```
+As we can see in these two code pieces, we are making a list of Box elements within the App, where each one has a
+prop name "on" that is a boolean, if true the box is black, if false the box is transparent, to achieve the clicking
+changes the on status, we created a new state that is initialized within each Box element on creation, that takes the initial
+value of "on" prop then we pass that state to the styleObject where based on its value we change the color of the box
+then we made a function that we used "setOnState" to change the state locally and passed that method in the "<div>'s onClick{}"
+
+This makes it work like a charm.
+
+    (Better Way)Unified: having the function that activates within the App.js file, and passing it to the components as a prop,
+    the issue is, having to change the state without dirctly modifying it, and there are many ways to do so, one of them is the follwoing:
+
+```
+import React from "react"
+import boxes from "./boxes"
+import Box from "./Box"
+
+export default function App() {
+    const [squares, setSquares] = React.useState(boxes)
+    
+    function toggle(id) {
+        setSquares(prevSquares => {
+            return prevSquares.map((square) => {
+                return square.id === id ? {...square, on: !square.on} : square // LOOK HERE
+            })
+        })
+    }
+    
+    const squareElements = squares.map(square => (
+        <Box 
+            key={square.id} 
+            id={square.id}
+            on={square.on} 
+            toggle={toggle} // LOOK HERE
+        />
+    ))
+    
+    return (
+        <main>
+            {squareElements}
+        </main>
+    )
+}
+```
+As we can see here, we're defining the toggle function, and inside it running the setSquares function, which will return,
+a map of all the squares and having that square change its own "on" property based on if its the id we clicked or not, which helps 
+prevent the other boxes from changing.
