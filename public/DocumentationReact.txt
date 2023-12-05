@@ -1095,3 +1095,301 @@ export default function App() {
 As we can see here, we're defining the toggle function, and inside it running the setSquares function, which will return,
 a map of all the squares and having that square change its own "on" property based on if its the id we clicked or not, which helps 
 prevent the other boxes from changing.
+-------------------------------------------------------------------------------------------------
+Quiz 7 (Conditional Rendering)
+1. What is "conditional rendering"?
+
+    Rendering a JSX element based on a certain condition, which can be done using many different ways in Javascript.
+
+2. When would you use &&?
+
+    When I want to either render/dispkay the element or not render/display the element
+
+3. When would you use a ternary?
+
+    When I want to render/display one of two values
+
+4. What if you need to decide between > 2 options on
+   what to display?
+
+    We can use the normal if / else if option, or the nested ternary option(Although not recommended).
+    Also "if / else if /else etc..." can't be used inline in JSX and should be used in its own and we just put a variable in the JSX element
+-------------------------------------------------------------------------------------------------
+41. React Forms
+
+In general in React handeling forms is done by having each input within the form as a state, that is constantly changing
+whenever the user types or changes an input, once the user is finished and clicks submit, the state of all inputs will be
+taken and made into an object that is then submitted via an API.
+
+- Handeling an input box:
+
+```
+    export default function Form() {
+    const [firstName, setFirstName] = React.useState("")
+    
+    console.log(firstName)
+    
+    function handleChange(event) {
+        setFirstName(event.target.value)
+    }
+    
+    return (
+        <form>
+            <input
+                type="text"
+                placeholder="First Name"
+                onChange={handleChange}
+            />
+        </form>
+    )
+}
+```
+In the form here we have an input box called "First Name" and we made a state that holds the value of that input box,
+we use onChange{handleChange} function to handle the change occuring in the input box and setting the state accordingly,
+and to do that we get the value of the event's target through having the event listner ("handleChange" function) by having it's parameter event
+and getting the target's value by using "event.target.value" and have that value be set to the input box using the state's set function.
+* setFirstName(event.target.value) *
+
+- Handeling a textarea:
+Works the same as an inputbox and its JSX representation is : <textarea /> 
+
+- Handeling a checkbox:
+
+a checkbox is handeled differently since it's value or in actuallty "checked" attribute can only be true/false,
+its JSX representation is the following:
+
+    ```
+    <input
+        type="checkbox"
+        id="isFriendly"
+        name="isFriendly"
+        checked={formData.isFriendly}
+        onChange={handleChange}
+    />
+    <label htmlFor="isFriendly">Are you friendly?</label>
+    ```
+As shown it has to have type as checkbox, its id and associated label's htmlFor attributes need to be the same so they're associated,
+and finally its checked attribute will take the for state object key representing it (in here named isFriendly).
+And to change it, its name also like all other input types should match its form state object key representing it.
+
+For this to actually work and change accodingly a modfied version of our handleChange() function was made, let's see:
+```
+function handleChange(event) {
+        const {name, value, type, checked} = event.target
+        setFormData(prevFormData => {
+            return {
+                ...prevFormData,
+                [name]: type === "checkbox" ? checked : value
+            }
+        })
+    }
+```
+As we can see we deconstructed the event.target so that we can get the target's name, value, type, and checked attributes
+we use the name to determine the input we're changing the state for, the value for the input boxes and text areas to recive,
+the type to helps us check if its a text type or checkbox (we checked for type="checkbox" so the else works for both input box and text area since textarea dosen't have a type)
+and finally checked to change the checkbox's value between true/false.
+
+- Handeling radio buttons:
+
+Radio buttons are similar to input boxes and text area in the sense that we use their value to change their form state object key, let's see with an example:
+
+```
+    <fieldset>
+                <legend>Current employment status</legend>
+                
+                <input 
+                    type="radio"
+                    id="unemployed"
+                    name="employment"
+                    value="unemployed"
+                    checked={formData.employment === "unemployed"}
+                    onChange={handleChange}
+                />
+                <label htmlFor="unemployed">Unemployed</label>
+                <br />
+                
+                <input 
+                    type="radio"
+                    id="part-time"
+                    name="employment"
+                    value="part-time"
+                    checked={formData.employment === "part-time"}
+                    onChange={handleChange}
+                />
+                <label htmlFor="part-time">Part-time</label>
+                <br />
+                
+                <input 
+                    type="radio"
+                    id="full-time"
+                    name="employment"
+                    value="full-time"
+                    checked={formData.employment === "full-time"}
+                    onChange={handleChange}
+                />
+                <label htmlFor="full-time">Full-time</label>
+                <br />
+                
+            </fieldset>
+```
+Here we have a field set that holds three radio buttons representing the employment status of the user, 
+they should be contained within a field set for better representation, and have a type of "radio", their id needs to match
+the "htmlFor" for their corrosponding label, the name for all the radion buttons should be the same, so that when selected
+only one of the radio buttons can be selected, the value should be what we want to display for the user later on, and it will be
+what is set within the "employment" key in the form state object, the checked here will need to return either true or false
+so we're checking if the current value of employment is the same as the id of this specific radio button, if its the same
+its checked will be true, otherwise it'll be false, this also helps us accomplish the controlled state for radio buttons
+and finally onChange calls the same function, the reason it works without changing anything is because the value within each radio button
+is the one set when that radio button is selected because it is the current event.target .
+
+- Handeling Select & Option
+
+Select and Option gives the user a chance to pick one out of many set options, its syntax is the following:
+
+```
+<label htmlFor="favColor">What is your favorite color?</label>
+            <br />
+            <select 
+                id="favColor"
+                value={formData.favColor}
+                onChange={handleChange}
+                name="favColor"
+            >
+                <option value="">-- Choose --</option>
+                <option value="red">Red</option>
+                <option value="orange">Orange</option>
+                <option value="yellow">Yellow</option>
+                <option value="green">Green</option>
+                <option value="blue">Blue</option>
+                <option value="indigo">Indigo</option>
+                <option value="violet">Violet</option>
+            </select>
+```
+As we can see the "id"="favColor" is the same as label's "htmlFor" attribute, the value will be the key representing the option
+within the form state object, onChange handles the change and name needs to be the same as the key of the corrisponding form state object,
+as we can see an option with the value of "" representing the start default value just like in the form state object favColor key having ""
+as its value, so that the option shown in the list is the first "-- Choose --" option. and yeah it works accordingly using the same handleChange function.
+
+- The final state of our form state object: 
+
+```
+const [formData, setFormData] = React.useState(
+        {
+            firstName: "", 
+            lastName: "", 
+            email: "", 
+            comments: "", 
+            isFriendly: true,
+            employment: "",
+            favColor: ""
+        }
+    )
+```
+
+- Handeling form submission
+
+```
+function handleSubmit(event) {
+        event.preventDefault()
+        submitToApi(formData)
+    }
+return (
+        <form onSubmit={handleSubmit}>
+        ....
+        ....
+        <button>Submit</button>
+        </form>
+    )
+```
+When we add a button inside a form, its type is changed to "submit" and the form will use it as its submit button,
+now to handle the submission, we add to the <form> element itself the onSubmit={handleSubmit} and the function handleSubmit
+will first do event.preventDefault() because when submitting the data entered will be taken to the link bar of the browser, and we don't want that to happeninng
+hence the event.preventDefault() function, anf lets say we have a submitToApi function, we just send the form state object to it
+and voila everything will work like a charm. 
+-------------------------------------------------------------------------------------------------
+42. Having a singular form state object
+
+A good practice is to hold all of our form's data in one state object with the object's key/value pairs representing each form input,
+here we'll look at an example:
+```
+export default function Form() {
+    const [formData, setFormData] = React.useState(
+        {firstName: "", lastName: "", email: ""}
+    )
+    
+    console.log(formData)
+    
+    function handleChange(event) {
+        setFormData(prevFormData => {
+            return {
+                ...prevFormData,
+                [event.target.name]: event.target.value
+            }
+        })
+    }
+    
+    return (
+        <form>
+            <input
+                type="text"
+                placeholder="First Name"
+                onChange={handleChange}
+                name="firstName"
+            />
+            <input
+                type="text"
+                placeholder="Last Name"
+                onChange={handleChange}
+                name="lastName"
+            />
+            <input
+                type="text"
+                placeholder="Email"
+                onChange={handleChange}
+                name="email"
+            />
+        </form>
+    )
+}
+```
+
+As we can see we have made a singular formData state object that holds our three form inputs
+notice how for the JSX inputs themselves we have their name attribute set the same as thier key name in the state object.
+this is so that when we call our singular handleChange function that handles change for all the input boxes, we can refrence the event target
+with its specific name as the key (in the returned object) and have its value be the event target's value.
+-------------------------------------------------------------------------------------------------
+43. Controlled input
+
+A better practice is to have the React state control the value of the input and NOT vice versa, to do this we add
+to the JSX element the value attribute, and have its value be the form state object key corrisponding to it, like this:
+
+```
+const [formData, setFormData] = React.useState(
+        {firstName: "", lastName: "", email: ""}
+    )
+
+    ...
+    ...
+    ...
+
+return (
+        <form>
+<input
+                type="text"
+                placeholder="First Name"
+                onChange={handleChange}
+                name="firstName"
+                value={formData.firstName}
+            />
+            <input
+                type="text"
+                placeholder="Last Name"
+                onChange={handleChange}
+                name="lastName"
+                value={formData.lastName}
+            />
+            </form>
+    )
+```
+Why we do it, is because React complains if the input isn't controlled.
+-------------------------------------------------------------------------------------------------
