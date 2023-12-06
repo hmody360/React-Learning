@@ -1393,3 +1393,199 @@ return (
 ```
 Why we do it, is because React complains if the input isn't controlled.
 -------------------------------------------------------------------------------------------------
+Quiz 8 (Forms)
+
+In a vanilla JS app, at what point in the form submission
+   process do you gather all the data from the filled-out form?
+   
+    you gather the data on form submission, when the user clicks on submit, and the data only exisits as values,
+    within their HTML DOM elemnts at this point.
+
+2. In a React app, when do you gather all the data from
+   the filled-out form?
+
+    onChange of each data element, we do this becuase it gives us more control over the data, and keeps the data updated in a state.
+
+3. Which attribute in the form elements (value, name, onChange, etc.)
+   should match the property name being held in state for that input?
+   
+    the attribute name should match the form state object's key related to that specific input.
+
+4. What's different about saving the data from a checkbox element
+   vs. other form elements?
+
+    the data returned from a checkbox is either true or false and is kept in an attribute named "checked", unlike the other data types which can return strings and other types of values.
+
+5. How do you watch for a form submit? How can you trigger
+   a form submit?
+
+   you trigger a form submit, by having a button within the form JSX elemnt itself, React will consider it as the submit button,
+   you also add the onSumbit={} attribute to the form JSX element where you'll pass a function that takes the form state object and sends it to some api for handeling.
+-------------------------------------------------------------------------------------------------
+44. Making API calls
+
+when using API calls to get data from an API, we need to do these two things in React:
+
+    1- GET the data (fetch, etc.)
+    2- Save Data into a state
+
+the first example: 
+```
+    const [dataState, setDataState] = React.useState({})
+
+    fetch("https://swapi.dev/api/people/1")
+        .then(res => res.json())
+        .then(data => setDataState(data))
+```
+
+Doing it in this way will cause the fetch operation to be called continusly forever while the program is running, which isn't good
+especially for a web application, the reason this is happening is because we're constantly setting the state with "setDataState(data)",
+because state should be updated on call, and the api is being called many times, so to solve this issue, we'll need to use useEffect() to manage this side effect.
+-------------------------------------------------------------------------------------------------
+45. What are side effects in React?
+
+a side effect is one of the things which react has no control over, and isn't able to automatically handle, these effects
+come from outside of react, which is why we need to handle them ourselves.
+
+some of which are:
+    - localStorage
+    - API/Database interactions
+    - Subscriptions
+    - Syncing 2 different internal states together
+
+These can be solved by the React.useEffect() hook, it's a tool that allows us to interact outside the React ecosystem.
+and it allows us to sync our React state, and the side effects mentioned before.
+-------------------------------------------------------------------------------------------------
+46. useEffect() hook
+
+    this hook enables us to deal with the side effects coming from things outside of React's boundary,
+    it takes in two parameters, the first parameter is the a function that takes in our code that causes the side effect and this function or effect is ran after our current component is rendered, 
+    and the other parameter is the dependincies array, which will detrmine how many times the function is ran based on the render, if left empty it'll make the function run once after the first render.
+
+    for example: 
+```
+export default function App() {
+    const [starWarsData, setStarWarsData] = React.useState({})
+    const [count, setCount] = React.useState(0)
+    
+    console.log("Component rendered")
+    
+    // side effects
+    React.useEffect(function() {
+        console.log("Effect ran")
+        // fetch("https://swapi.dev/api/people/1")
+        //     .then(res => res.json())
+        //     .then(data => console.log(data))
+    })
+    
+    return (
+        <div>
+            <pre>{JSON.stringify(starWarsData, null, 2)}</pre>
+            <h2>The count is {count}</h2>
+            <button onClick={() => setCount(prevCount => prevCount + 1)}>Add</button>
+        </div>
+    )
+}
+```
+In this code we have an add button, which is used to add 1 to the counter, point is whenever it is clicked, it rerenders the component.
+
+no in the useEffect function, if we didn't add the dependincies array as a second parameter, whenever we click on add the component is rendered, and the useEffect()
+first parameter function runs, if we have an empty array as a second parameter like this:
+
+```
+React.useEffect(function() {
+        console.log("Effect ran")
+        // fetch("https://swapi.dev/api/people/1")
+        //     .then(res => res.json())
+        //     .then(data => console.log(data))
+    }, [])
+```
+
+This will make the function run only once after the first render of the component.
+
+now the actual use of the dependincies array is, we can put into it state values, like count state for example:
+
+```
+React.useEffect(function() {
+        console.log("Effect ran")
+        // fetch("https://swapi.dev/api/people/1")
+        //     .then(res => res.json())
+        //     .then(data => console.log(data))
+    }, [count])
+```
+
+now what happens is the following, when a render happens the dependincies array will compare it's value from before the render, to its value after the render,
+
+so if before clicking the Add button and rerendering, the count state was [0], after clicking add and rerendering, count becomes [1]
+so [0] compared to [1], if there's a difference between the two arrays, the function in the first parameter will run, this can be used with many other state values that might or
+might not change, as long as something changed in the array between the renders, the function will run, if the arrays are the same the function will not run.
+-------------------------------------------------------------------------------------------------
+Quiz 9 (useEffect)
+
+1. What is a "side effect" in React? What are some examples?
+
+a side effect is something that occurs and is outside of React's boundraies, it can't automatically handle it or access its core code by itself.
+some examples are:
+    - localStorage
+    - API interaction
+    - two pieces of state you want to keep in sync
+    - setting a state (since it rerenders)
+    - etc.
+
+2. What is NOT a "side effect" in React? Examples?
+
+updating a state, console logging, a normal function, and these are things that React can handle from within and can have instant access to.
+
+3. When does React run your useEffect function? When does it NOT run
+   the effect function?
+   
+it runs it if the previous dependecies array is different from the new dependecies array on component render, otherwise it'll only run it once
+and won't run it if the dependecies array isn't changing.
+
+4. How would you explain what the "dependecies array" is?
+
+an array that controls the running of a function based on the state or many states within it, if it changes on render the useEffect() function in the first parameter runs.
+-------------------------------------------------------------------------------------------------
+47. Memory leak when having an event listenr for a non existant DOM element
+
+When I have an event listener that is using a setState of state that is shown in a JSX element, and for any reason that JSX element was removed by a show/hide function,
+the event listener will still be active and update the value which causes a memory leak.
+-------------------------------------------------------------------------------------------------
+48. useEffect() cleanup function
+
+in the same useEffect() function parameter, I'm able to make that function return something, what it should return,
+is another function called clean up function, in the example below we had a watchWidth() method that is added to the event listener,
+but then removed when returning to clean up, this means if the JSX element returning the result isn't shown, it won't cause a memory leak
+
+```
+React.useEffect(() => {
+        function watchWidth() {
+            console.log("Setting up...")
+            setWindowWidth(window.innerWidth)
+        }
+        
+        window.addEventListener("resize", watchWidth)
+        
+        return function() {
+            console.log("Cleaning up...")
+            window.removeEventListener("resize", watchWidth)
+        }
+    }, [])
+```
+-------------------------------------------------------------------------------------------------
+49. using async function with useEffect()
+
+Now we can't declare the first parameter function as an async function because async functions return a promise,
+and the return functionality of this first parameter is to return a cleanup function not a promise, and that's how React sees it
+, but there's a work around by declaring an async function inside the first parameter function, then calling it, like this:
+```
+React.useEffect(() => {
+        async function getMemes() {
+            const res = await fetch("https://api.imgflip.com/get_memes")
+            const data = await res.json()
+            setAllMemes(data.data.memes)
+        }
+        getMemes()
+    }, [])
+```
+-------------------------------------------------------------------------------------------------
